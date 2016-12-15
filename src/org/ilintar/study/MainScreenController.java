@@ -1,7 +1,7 @@
 package org.ilintar.study;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import org.ilintar.study.question.*;
@@ -32,18 +32,29 @@ public class MainScreenController  implements QuestionAnsweredEventListener {
 
     @FXML AnchorPane mainStudy;
 
+    //Just a self-explanatory dummy variable for startStudy():
+    int questionCounter = 0;
+    //AND NOW FOR STH COMPLETELY DIFFERENT:
 	@FXML public void startStudy() {
 	    //Clear the pane:
 		mainStudy.getChildren().clear();
 		//Create a new Question object basing on the input file:
-        RadioQuestion createdQuestion = (RadioQuestion) readQuestionFromFile(0, getClass().getResourceAsStream("StudyDetails.sqf"));
+        RadioQuestion createdQuestion = (RadioQuestion) readQuestionFromFile(questionCounter,
+                getClass().getResourceAsStream("StudyDetails.sqf"));
 		//Add the question's graphical component to the pane:
-		mainStudy.getChildren().add(createdQuestion.getRenderedQuestion());
+        mainStudy.getChildren().add(createdQuestion.getRenderedQuestion());
         //Create new button for question ending:
         Button questionAnsweredButton = new Button("Zakończ pytanie");
-        questionAnsweredButton.onMouseClickedProperty();
         //Add the button to the pane:
         mainStudy.getChildren().add(questionAnsweredButton);
+        //Set button's reaction:
+        questionAnsweredButton.setOnAction((event) -> {
+            mainStudy.getChildren().remove(createdQuestion);
+            questionCounter++;
+            RadioQuestion tempQuestion = (RadioQuestion) readQuestionFromFile(questionCounter,
+                    getClass().getResourceAsStream("StudyDetails.sqf"));
+            mainStudy.getChildren().add(tempQuestion.getRenderedQuestion());
+        });
 	}
 
 	//The .sqf parser:

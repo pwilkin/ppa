@@ -4,7 +4,7 @@ First answer
 A
 Second answer
 B
-Third answer modified
+Third answer
 C
 Fourth answer
 D
