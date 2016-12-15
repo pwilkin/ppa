@@ -2,16 +2,16 @@ package org.ilintar.study.question;
 
 import java.util.List;
 
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 
 public class RadioQuestionFactory implements QuestionFactory {
-
+//Creates Question objects basing on parsed .sqf;
+//At the first step, creates visual component of the question (a VBox object).
 	@Override
-	public Node createQuestion(List<String> lines) {
+	public Question createQuestion(List<String> lines) {
 		VBox questions = new VBox();
 		String question = lines.get(0);
 		questions.getChildren().add(new Label(question));
@@ -25,7 +25,12 @@ public class RadioQuestionFactory implements QuestionFactory {
 			questions.getChildren().add(button);
 		}
 		questions.onContextMenuRequestedProperty();
-		return questions;
+		//Create new RadioQuestion object:
+		RadioQuestion createdQuestion = new RadioQuestion();
+		//Add the created VBox to the question (later available by getEmpiricalComponent()):
+		createdQuestion.setEmpiricalPart(questions);
+		//Return the whole question as a RadioQuestion object:
+		return createdQuestion;
 	}
 
 }

@@ -1,5 +1,8 @@
 package org.ilintar.study.question.event;
 
+import javafx.beans.NamedArg;
+import javafx.event.Event;
+import javafx.event.EventType;
 import org.ilintar.study.question.Answer;
 import org.ilintar.study.question.Question;
 

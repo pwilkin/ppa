@@ -6,6 +6,6 @@ import javafx.scene.Node;
 
 public interface QuestionFactory {
 		
-	public Node createQuestion(List<String> lines);
+	public Question createQuestion(List<String> lines);
 	
 }

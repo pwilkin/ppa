@@ -1,5 +1,13 @@
 package org.ilintar.study;
 
+import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
+import org.ilintar.study.question.*;
+import org.ilintar.study.question.event.QuestionAnsweredEvent;
+import org.ilintar.study.question.event.QuestionAnsweredEventListener;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,14 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ilintar.study.question.QuestionFactory;
-import org.ilintar.study.question.RadioQuestionFactory;
-
-import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.layout.AnchorPane;
-
-public class MainScreenController {
+public class MainScreenController  implements QuestionAnsweredEventListener {
 	
 	protected static Map<String, QuestionFactory> factoryMap;
 	
@@ -25,18 +26,31 @@ public class MainScreenController {
 		factoryMap.put("radio", new RadioQuestionFactory());
 	}
 
-	@FXML AnchorPane mainStudy;
+	//Storage of already answered & gathered questions from current study;
+    //questions are stored as their IDs to save memory; answers are stored as Answer objects.
+	private Map<String, Answer> collectedAnswers = new HashMap<>();
+
+    @FXML AnchorPane mainStudy;
 
 	@FXML public void startStudy() {
+	    //Clear the pane:
 		mainStudy.getChildren().clear();
-		Node questionComponent = readQuestionFromFile(0, getClass().getResourceAsStream("StudyDetails.sqf"));
-		mainStudy.getChildren().add(questionComponent);
+		//Create a new Question object basing on the input file:
+        RadioQuestion createdQuestion = (RadioQuestion) readQuestionFromFile(0, getClass().getResourceAsStream("StudyDetails.sqf"));
+		//Add the question's graphical component to the pane:
+		mainStudy.getChildren().add(createdQuestion.getRenderedQuestion());
+        //Create new button for question ending:
+        Button questionAnsweredButton = new Button("Zakończ pytanie");
+        questionAnsweredButton.onMouseClickedProperty();
+        //Add the button to the pane:
+        mainStudy.getChildren().add(questionAnsweredButton);
 	}
 
-	private Node readQuestionFromFile(int i, InputStream resourceAsStream) {
+	//The .sqf parser:
+	private Question readQuestionFromFile(int questionCounter, InputStream resourceAsStream) {
 		BufferedReader br = new BufferedReader(new InputStreamReader(resourceAsStream));
 		String currentLine;
-		int which = 0;
+		int counter = 0;
 		List<String> questionLines = new ArrayList<>();
 		boolean readingQuestions = false;
 		String questionType = null;
@@ -46,7 +60,7 @@ public class MainScreenController {
 					if (readingQuestions) {
 						throw new IllegalArgumentException("Invalid file format: StartQuestion without EndQuestion");
 					}
-					if (which == i) {
+					if (counter == questionCounter) {
 						readingQuestions = true;
 						String[] split = currentLine.split(" ");
 						if (split.length > 1) {
@@ -59,7 +73,7 @@ public class MainScreenController {
 							throw new IllegalArgumentException("Invalid file format: StartQuestion type=<type>");
 						}
 					} else {
-						which++;
+						counter++;
 					}
 				} else {
 					if (readingQuestions) {
@@ -80,5 +94,11 @@ public class MainScreenController {
 		}
 		return null;
 	}
+
+	//Method from the QuestionAnsweredListener interface.
+    //Puts the current question & its answer into the collectedAnswers HashMap and reads the next question.
+	public void handleQuestionAnsweredEvent(QuestionAnsweredEvent e) {
+	    this.collectedAnswers.put(e.getQuestion().getId(), e.getAnswer());
+    }
 	
 }
