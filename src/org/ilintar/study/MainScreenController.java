@@ -9,16 +9,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.ilintar.study.question.Answer;
 import org.ilintar.study.question.IQuestion;
-import org.ilintar.study.question.Question;
 import org.ilintar.study.question.QuestionFactory;
 import org.ilintar.study.question.RadioQuestionFactory;
+import org.ilintar.study.question.event.QuestionAnsweredEvent;
+import org.ilintar.study.question.event.QuestionAnsweredEventListener;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 
-public class MainScreenController {
+public class MainScreenController implements QuestionAnsweredEventListener{
 	
 	protected static Map<String, QuestionFactory> factoryMap;
 	
@@ -74,7 +76,7 @@ public class MainScreenController {
 						if (currentLine.startsWith("EndQuestion")) {
 							if (factoryMap.containsKey(questionType)) {
 								IQuestion question = factoryMap.get(questionType).createQuestion(questionLines, questionId);
-								
+								question.addQuestionAnsweredListener(this);
 								return question.getRenderedQuestion();
 							} else {
 								throw new IllegalArgumentException("Do not have a factory for question type: " + questionType);
@@ -89,6 +91,15 @@ public class MainScreenController {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public void handleEvent(QuestionAnsweredEvent event) {
+		IQuestion question = event.getQuestion();
+		Answer answer = event.getAnswer();
+		System.out.println(question.getId());
+		System.out.println(answer.getAnswer());
+		
 	}
 	
 }

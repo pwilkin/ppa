@@ -3,7 +3,7 @@ package org.ilintar.study.question.event;
 import org.ilintar.study.question.Answer;
 import org.ilintar.study.question.IQuestion;
 
-/* pomidor */
+
 public class QuestionAnsweredEvent {
 
 	protected IQuestion question;

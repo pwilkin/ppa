@@ -29,7 +29,7 @@ public class RadioQuestionFactory implements QuestionFactory {
 		Button finishButton = new Button("Zapisz");
 		questions.getChildren().add(finishButton);
 		questions.onContextMenuRequestedProperty();
-		Question question = new Question(questions, id, finishButton);
+		Question question = new Question(questions, id, finishButton, group);
 		return question;
 	}
 
