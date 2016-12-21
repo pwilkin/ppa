@@ -6,7 +6,11 @@ import javafx.scene.Node;
 
 public interface Question extends QuestionAnsweredEventNotifier {
 
-	public Node getRenderedQuestion();
-	public String getId();
+	Node getRenderedQuestion();
+	String getId();
+
+	public void fireEvent();
+
+	Answer getSelectedAnswer();
 	
 }

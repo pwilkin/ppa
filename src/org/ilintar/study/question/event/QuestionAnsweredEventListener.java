@@ -1,5 +1,7 @@
 package org.ilintar.study.question.event;
 
-public class QuestionAnsweredEventListener {
+public interface QuestionAnsweredEventListener {
+
+    void handleEvent(QuestionAnsweredEvent event);
 
 }
