@@ -9,5 +9,7 @@ public interface IQuestion extends QuestionAnsweredEventNotifier {
 
 	public Node getRenderedQuestion();
 	public String getId();
+	//public void fireEvent(Answer answer);
+	public Answer getAnswer();
 	
 }
