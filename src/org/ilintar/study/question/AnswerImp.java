@@ -18,6 +18,7 @@ public class AnswerImp implements Answer{
         return answerCode;
     }
 
+
     @Override
     public String getAnswerString() {
         return answerString;

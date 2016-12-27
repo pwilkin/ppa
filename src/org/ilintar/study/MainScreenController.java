@@ -105,7 +105,9 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 
 	@Override
 	public void handleEvent(QuestionAnsweredEvent event) {
-		event.saveToFile();
+//		event.saveToFile(); // doesn't work yet.
+		System.out.println(event.getQuestion().getId());
+		System.out.println(event.getAnswer().getAnswerCode());
 		changeQuestion();
 	}
 }
