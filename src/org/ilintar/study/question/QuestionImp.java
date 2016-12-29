@@ -8,15 +8,12 @@ import org.ilintar.study.question.event.QuestionAnsweredEventListener;
 
 
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-
 
 public abstract class QuestionImp implements IQuestion {
 	
 	protected Node renderedQuestion;
 	protected String id;
 	protected List<QuestionAnsweredEventListener> listeners;
-	protected Button finishButton;
 	
 
 	public QuestionImp(Node renderedQuestion, String id) {
