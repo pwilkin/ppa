@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 public class RadioQuestionFactory implements QuestionFactory {
 
 	@Override
-	public IQuestion createQuestion(List<String> lines, String id) {
+	public RadioQuestion createQuestion(List<String> lines, String id) {
 		VBox questions = new VBox();
 		String question1 = lines.get(0);
 		questions.getChildren().add(new Label(question1));
@@ -26,10 +26,11 @@ public class RadioQuestionFactory implements QuestionFactory {
 			button.setToggleGroup(group);
 			questions.getChildren().add(button);
 		}
+		RadioQuestion question = new RadioQuestion(questions, id, group);
 		Button finishButton = new Button("Zapisz");
+		finishButton.setOnAction((event) -> {question.fireEvent();});
 		questions.getChildren().add(finishButton);
 		questions.onContextMenuRequestedProperty();
-		RadioQuestion question = new RadioQuestion(questions, id, finishButton, group);
 		return question;
 	}
 

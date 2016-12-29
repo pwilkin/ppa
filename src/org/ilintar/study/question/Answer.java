@@ -12,9 +12,9 @@ public class Answer {
 		return answer;
 	}
 
-	public void setAnswer(String answer) {
-		this.answer = answer;
-	}
+//	public void setAnswer(String answer) {
+//		this.answer = answer;
+//	}
 
 
 

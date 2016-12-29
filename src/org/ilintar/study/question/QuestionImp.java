@@ -11,7 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 
 
-public abstract class QuestionImpl implements IQuestion {
+public abstract class QuestionImp implements IQuestion {
 	
 	protected Node renderedQuestion;
 	protected String id;
@@ -19,11 +19,9 @@ public abstract class QuestionImpl implements IQuestion {
 	protected Button finishButton;
 	
 
-	public QuestionImpl(Node renderedQuestion, String id, Button finishButton) {
+	public QuestionImp(Node renderedQuestion, String id) {
 		this.id = id;
 		this.renderedQuestion = renderedQuestion;
-		this.finishButton = finishButton;
-		this.finishButton.setOnAction((event) -> {fireEvent(getAnswer());});
 		listeners = new ArrayList<>();
 	}
 
@@ -51,8 +49,8 @@ public abstract class QuestionImpl implements IQuestion {
 
 	public abstract Answer getAnswer();
 	
-	public void fireEvent(Answer answer) {
-		QuestionAnsweredEvent event = new QuestionAnsweredEvent(this, answer);
+	public void fireEvent() {
+		QuestionAnsweredEvent event = new QuestionAnsweredEvent(this, getAnswer());
 		for (QuestionAnsweredEventListener listener : listeners) {
 			listener.handleEvent(event);
 		}
@@ -61,3 +59,9 @@ public abstract class QuestionImpl implements IQuestion {
 
 
 }
+
+// przenieść przycisk
+// zmiana nazw
+// maincontroler od Konrada liczenie pytań
+// printwriter od Ewy
+
