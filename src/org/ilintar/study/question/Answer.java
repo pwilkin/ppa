@@ -1,9 +1,9 @@
 package org.ilintar.study.question;
 
 public class Answer {
-	
+
 	private String answer;
-	
+
 	public Answer(String answer) {
 		this.answer = answer;
 	}
@@ -11,15 +11,4 @@ public class Answer {
 	public String getAnswer() {
 		return answer;
 	}
-
-//	public void setAnswer(String answer) {
-//		this.answer = answer;
-//	}
-
-
-
-    String getAnswerCode();
-
-    String getAnswerString();
-
 }

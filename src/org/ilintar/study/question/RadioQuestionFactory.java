@@ -15,8 +15,8 @@ public class RadioQuestionFactory implements QuestionFactory {
         VBox questions = new VBox();
         String question1 = lines.get(0);
         questions.getChildren().add(new Label(question1));
-        String labelId = "id= " + id;
-        questions.getChildren().add(new Label(labelId));
+//        String labelId = "id= " + id; // KZ: it definitly does not look like well in the user view
+//        questions.getChildren().add(new Label(labelId));
         ToggleGroup group = new ToggleGroup();
         for (int i = 1; i < lines.size(); i+=2) {
             String answer = lines.get(i);
@@ -27,7 +27,7 @@ public class RadioQuestionFactory implements QuestionFactory {
             questions.getChildren().add(button);
         }
         RadioQuestion question = new RadioQuestion(questions, id, group);
-        Button finishButton = new Button("Subit");
+        Button finishButton = new Button("Submit");
         finishButton.setOnAction((event) -> {question.fireEvent();});
         questions.getChildren().add(finishButton);
         questions.onContextMenuRequestedProperty();

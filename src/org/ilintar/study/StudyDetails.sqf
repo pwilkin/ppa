@@ -22,18 +22,6 @@ Chose this answer to win.
 X
 EndQuestion
 
-StartQuestion type=radio ID=2
-This is the second question
-First answer is totally modified.
-A
-Second answer
-B
-Third answer modified
-C
-Chose this answer to win.
-X
-EndQuestion
-
 StartQuestion type=radio ID=3
 This is the 3rd question
 First answer is totally modified.

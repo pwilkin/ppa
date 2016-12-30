@@ -1,14 +1,12 @@
 package org.ilintar.study;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javafx.scene.control.Label;
 import org.ilintar.study.question.Answer;
 import org.ilintar.study.question.IQuestion;
 import org.ilintar.study.question.QuestionFactory;
@@ -26,13 +24,16 @@ import org.ilintar.study.question.event.QuestionAnsweredEventListener;
 
 public class MainScreenController implements QuestionAnsweredEventListener {
 
+    protected PrintWriter out;
+
 	private int whichQuestion;
 
-	public MainScreenController(){
+	public MainScreenController() throws FileNotFoundException {
+        out = new PrintWriter("answers.answ");
 		this.whichQuestion = 0;
 	}
 
-	protected static Map<String, QuestionFactory> factoryMap;
+	private static Map<String, QuestionFactory> factoryMap;
 
 	static {
 		factoryMap = new HashMap<>();
@@ -46,10 +47,21 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 	@FXML public void startStudy() {
 		mainStudy.getChildren().clear();
 		Node questionComponent = readQuestionFromFile(whichQuestion, getClass().getResourceAsStream("StudyDetails.sqf"));
-		mainStudy.getChildren().add(questionComponent);
+		if (questionComponent != null){
+            mainStudy.getChildren().add(questionComponent);
+        }
+        else {
+            endStudy();
+        }
+
 	}
 
-	private Node readQuestionFromFile(int i, InputStream resourceAsStream) {
+    private void endStudy() {
+        mainStudy.getChildren().clear();
+        mainStudy.getChildren().add(new Label("Thank you!"));
+    }
+
+    private Node readQuestionFromFile(int i, InputStream resourceAsStream) {
 		BufferedReader br = new BufferedReader(new InputStreamReader(resourceAsStream));
 		String currentLine;
 		int which = 0;
@@ -89,7 +101,7 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 					if (readingQuestions) {
 						if (currentLine.startsWith("EndQuestion")) {
 							if (factoryMap.containsKey(questionType)) {
-								currentQuestion = factoryMap.get(questionType).createQuestion(questionLines, questionID);
+								currentQuestion = factoryMap.get(questionType).createQuestion(questionLines, questionId);
 								currentQuestion.addQuestionAnsweredListener(this);
 								whichQuestion++;
 								return currentQuestion.getRenderedQuestion();
@@ -114,7 +126,8 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 		Answer answer = event.getAnswer();
 		System.out.println(question.getId());
 		System.out.println(answer.getAnswer());
-
+        event.saveToFile();
+        startStudy(); // this name is confusing, should be changed to 'changeQuestion' or smth
 	}
 
 }

@@ -56,8 +56,3 @@ public abstract class QuestionImp implements IQuestion {
 
 
 }
-
-
-// maincontroler od Konrada liczenie pytań
-// printwriter od Ewy
-
