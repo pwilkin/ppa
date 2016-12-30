@@ -19,11 +19,21 @@ import org.ilintar.study.question.event.QuestionAnsweredEventListener;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import org.ilintar.study.question.event.QuestionAnsweredEvent;
+import org.ilintar.study.question.event.QuestionAnsweredEventListener;
+import org.ilintar.study.question.event.QuestionAnsweredEvent;
+import org.ilintar.study.question.event.QuestionAnsweredEventListener;
 
-public class MainScreenController implements QuestionAnsweredEventListener{
-	
+public class MainScreenController implements QuestionAnsweredEventListener {
+
+	private int whichQuestion;
+
+	public MainScreenController(){
+		this.whichQuestion = 0;
+	}
+
 	protected static Map<String, QuestionFactory> factoryMap;
-	
+
 	static {
 		factoryMap = new HashMap<>();
 		factoryMap.put("radio", new RadioQuestionFactory());
@@ -31,9 +41,11 @@ public class MainScreenController implements QuestionAnsweredEventListener{
 
 	@FXML AnchorPane mainStudy;
 
+    protected IQuestion currentQuestion;
+
 	@FXML public void startStudy() {
 		mainStudy.getChildren().clear();
-		Node questionComponent = readQuestionFromFile(0, getClass().getResourceAsStream("StudyDetails.sqf"));
+		Node questionComponent = readQuestionFromFile(whichQuestion, getClass().getResourceAsStream("StudyDetails.sqf"));
 		mainStudy.getChildren().add(questionComponent);
 	}
 
@@ -47,37 +59,40 @@ public class MainScreenController implements QuestionAnsweredEventListener{
 		String questionId = null;
 		try {
 			while ((currentLine = br.readLine()) != null) {
-				if (currentLine.startsWith("StartQuestion")) {
+				if (currentLine.startsWith("StartQuestion")) { // begin reading questions
 					if (readingQuestions) {
 						throw new IllegalArgumentException("Invalid file format: StartQuestion without EndQuestion");
 					}
 					if (which == i) {
 						readingQuestions = true;
-						String[] split = currentLine.split(" ");
-						if (split.length > 2) {
-							String[] split2 = split[1].split("=");
-							String[] split3 = split[2].split("=");
-							if (split2.length > 1) {
-								questionType = split2[1];
+						String[] elements = currentLine.split(" ");
+						if (elements.length > 1) {
+							String[] givenType = elements[1].split("=");
+							if (givenType.length > 1) {
+								questionType = givenType[1];
 							}
-							if (split3.length > 1) {
-								questionId = split3[1];
+							if (elements.length > 2){
+								String[] givenID = elements[2].split("=");
+								questionId = givenID[1];
 							}
 						}
 						if (questionType == null) {
 							throw new IllegalArgumentException("Invalid file format: StartQuestion type=<type>");
 						}
-					} 
-					else {
+						if (questionId == null) {
+							throw new IllegalArgumentException("Invalid file format: StartQuestion ID=<ID>");
+						}
+					} else {
 						which++;
 					}
-				}  else {
+				} else {
 					if (readingQuestions) {
 						if (currentLine.startsWith("EndQuestion")) {
 							if (factoryMap.containsKey(questionType)) {
-								IQuestion question = factoryMap.get(questionType).createQuestion(questionLines, questionId);
-								question.addQuestionAnsweredListener(this);
-								return question.getRenderedQuestion();
+								currentQuestion = factoryMap.get(questionType).createQuestion(questionLines, questionID);
+								currentQuestion.addQuestionAnsweredListener(this);
+								whichQuestion++;
+								return currentQuestion.getRenderedQuestion();
 							} else {
 								throw new IllegalArgumentException("Do not have a factory for question type: " + questionType);
 							}
@@ -99,7 +114,7 @@ public class MainScreenController implements QuestionAnsweredEventListener{
 		Answer answer = event.getAnswer();
 		System.out.println(question.getId());
 		System.out.println(answer.getAnswer());
-		
+
 	}
-	
+
 }

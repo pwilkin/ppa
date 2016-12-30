@@ -18,4 +18,8 @@ public class Answer {
 
 
 
+    String getAnswerCode();
+
+    String getAnswerString();
+
 }
