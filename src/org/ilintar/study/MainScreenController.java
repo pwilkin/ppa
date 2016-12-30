@@ -26,6 +26,7 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 	public MainScreenController(){
 		this.whichQuestion = 0;
 	}
+
 	protected static Map<String, QuestionFactory> factoryMap;
 
 	static {

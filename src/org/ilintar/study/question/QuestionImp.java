@@ -11,6 +11,7 @@ import java.util.Map;
 /**
  * Created by Konrad on 2016-12-20.
  */
+
 public abstract class QuestionImp implements Question {
 
     List<QuestionAnsweredEventListener> listeners = new ArrayList<>();

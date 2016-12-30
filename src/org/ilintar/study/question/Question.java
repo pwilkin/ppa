@@ -12,5 +12,7 @@ public interface Question extends QuestionAnsweredEventNotifier {
 	public void fireEvent();
 
 	Answer getSelectedAnswer();
-	
+
+
+
 }

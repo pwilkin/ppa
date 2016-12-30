@@ -34,6 +34,7 @@ public class RadioQuestionFactory implements QuestionFactory {
 		Button submit = new Button();
 		submit.setText("Submit");
 		submit.setOnAction(event -> question.fireEvent());
+
 		questionBox.getChildren().add(submit);
 		return question;
 	}
