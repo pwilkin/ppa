@@ -1,19 +1,18 @@
 package org.ilintar.study;
 
+import com.sun.org.apache.xerces.internal.xs.StringList;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.effect.Effect;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import org.ilintar.study.question.*;
 import org.ilintar.study.question.event.RadioQuestionAnswerListener;
 import org.ilintar.study.question.event.WriteQuestionAnswerListener;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -110,6 +109,7 @@ public class MainScreenController {
         else if (questionType.equals("write")) {
             q.addQuestionAnsweredListener(new WriteQuestionAnswerListener(answerHolder, this));
         }
+        //TODO: dodac nastepne typy pytan, wygenerowalem juz klasy
         return q.getRenderedQuestion();
     }
 
@@ -132,7 +132,7 @@ public class MainScreenController {
         exitButton.relocate(mainStudy.getWidth()/2, mainStudy.getHeight()/2);
         resultsButton.relocate(mainStudy.getWidth()/4, mainStudy.getHeight()/2);
 
-        //quitButton.setOnAction(e -> System.out.println());
+        //exitButton.setOnAction(e -> System.out.println());
         exitButton.setOnAction(new EventHandler<javafx.event.ActionEvent>() {   //zamienne z lambdą
             @Override
             public void handle(javafx.event.ActionEvent event) {
@@ -162,10 +162,22 @@ public class MainScreenController {
 
     }
     private void resultsScreen(){           //TODO: wyniki w oknie a nie konsoli
+        System.out.println("\nResults");
         for (Object o: answerHolder.getAnswers()) {                 //ufff, getAnswers() zwraca odpowiedzi jako ArrayList
             System.out.println(o);
         }
     }
+
+    public void generateStudy(ActionEvent actionEvent) { //TODO: interfejs do generowania .sqf dla naszego programu
+
+        mainStudy.getChildren().clear();
+        mainStudy.getChildren().add(new Text(50,50,"It will be done"));
+
+
+
+    }
+        //TODO: moznaby tez zrobic przycisk "Go back" ktory bylby odziedziczone przez niektóre okna (ale to trzeba zrobic w mainie
+        //TODO: uzywajac stage.setScene()?
 
 }
 

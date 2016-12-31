@@ -1,11 +1,11 @@
 StartQuestion type=write
-Second question
+First question
 EndQuestion
 StartQuestion type=write
 Second question
 EndQuestion
 StartQuestion type=write
-Second question
+Third question
 EndQuestion
 StartQuestion type=radio
 This is the question
@@ -19,10 +19,10 @@ Fourth answer
 D
 EndQuestion
 StartQuestion type=write
-Second question
+Next question
 EndQuestion
 StartQuestion type=radio
-Third question
+Another question
 Answer1
 A
 Answer2
@@ -33,7 +33,7 @@ Answer4
 D
 EndQuestion
 StartQuestion type=radio
-Third question
+Last question
 Answer1
 A
 Answer2

@@ -28,7 +28,8 @@
                     </rowConstraints>
                      <children>
                         <Label alignment="CENTER" contentDisplay="CENTER" text="Welcome to the study" GridPane.columnIndex="1" />
-                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#startStudy" text="Start" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Button alignment="BOTTOM_RIGHT" mnemonicParsing="false" onAction="#startStudy" text="Start"  />
+                         <Button alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#generateStudy" text="generateStudy" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                </children>
