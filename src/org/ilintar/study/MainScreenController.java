@@ -7,10 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javafx.scene.control.Label;
-import org.ilintar.study.question.Answer;
-import org.ilintar.study.question.IQuestion;
-import org.ilintar.study.question.QuestionFactory;
-import org.ilintar.study.question.RadioQuestionFactory;
+import org.ilintar.study.question.*;
 import org.ilintar.study.question.event.QuestionAnsweredEvent;
 import org.ilintar.study.question.event.QuestionAnsweredEventListener;
 
@@ -30,7 +27,7 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 
 	public MainScreenController() throws FileNotFoundException {
         out = new PrintWriter("answers.answ");
-		this.whichQuestion = 0;
+		this.whichQuestion = -1;
 	}
 
 	private static Map<String, QuestionFactory> factoryMap;
@@ -38,15 +35,22 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 	static {
 		factoryMap = new HashMap<>();
 		factoryMap.put("radio", new RadioQuestionFactory());
+		factoryMap.put("music", new MusicRadioQuestionFactory());
 	}
 
 	@FXML AnchorPane mainStudy;
 
     protected IQuestion currentQuestion;
 
+	int trackNumber = 1; // it's weird place for this var, but it don't destroy anything
+
+    String studyDetails = "StudyDetails.sqf"; // should be set by clicking corresponding button
+//    String studyDetails = "MusicStudyDetails.sqf";
+
 	@FXML public void startStudy() {
+        whichQuestion++;
 		mainStudy.getChildren().clear();
-		Node questionComponent = readQuestionFromFile(whichQuestion, getClass().getResourceAsStream("StudyDetails.sqf"));
+		Node questionComponent = readQuestionFromFile(whichQuestion, getClass().getResourceAsStream(studyDetails));
 		if (questionComponent != null){
             mainStudy.getChildren().add(questionComponent);
         }
@@ -102,8 +106,12 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 						if (currentLine.startsWith("EndQuestion")) {
 							if (factoryMap.containsKey(questionType)) {
 								currentQuestion = factoryMap.get(questionType).createQuestion(questionLines, questionId);
+								if (questionType.equals("music")){
+									MusicRadioQuestion currentQuestion = (MusicRadioQuestion) factoryMap.get(questionType).createQuestion(questionLines, questionId);
+									currentQuestion.runTrack(trackNumber) ;
+									trackNumber++;
+								}
 								currentQuestion.addQuestionAnsweredListener(this);
-								whichQuestion++;
 								return currentQuestion.getRenderedQuestion();
 							} else {
 								throw new IllegalArgumentException("Do not have a factory for question type: " + questionType);
@@ -127,6 +135,11 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 		System.out.println(question.getId());
 		System.out.println(answer.getAnswer());
         event.saveToFile();
+		if (currentQuestion instanceof MusicRadioQuestion){
+            System.out.println(((MusicRadioQuestion)currentQuestion).getMediaPlayer());
+            System.out.println(currentQuestion.getId());
+            ((MusicRadioQuestion) currentQuestion).terminateTrack();
+		}
         startStudy(); // this name is confusing, should be changed to 'changeQuestion' or smth
 	}
 
