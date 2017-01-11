@@ -64,10 +64,6 @@ public class MainScreenController implements QuestionAnsweredEventListener {
         whichQuestion++;
 		mainStudy.getChildren().clear();
 		Node questionComponent = readQuestionFromFile(whichQuestion, getClass().getResourceAsStream(fileName));
-        // test part
-        MusicRadioQuestion xxx = (MusicRadioQuestion) currentQuestion;
-        System.out.println(xxx.getMediaPlayer()); // why this is null? It was not in line 136
-        // ends here
 		if (questionComponent != null){
 			String questionTitle = "Pytanie " + String.valueOf(whichQuestion+1);
 			titledPane.setText(questionTitle);
@@ -128,13 +124,9 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 							if (factoryMap.containsKey(questionType)) {
 								currentQuestion = factoryMap.get(questionType).createQuestion(questionLines, questionId);
 								if (questionType.equals("music")){
-									MusicRadioQuestion currentQuestion = (MusicRadioQuestion) factoryMap.get(questionType).createQuestion(questionLines, questionId);
-									currentQuestion.runTrack(trackNumber) ;
+                                    MusicRadioQuestion musicQuestion = (MusicRadioQuestion) currentQuestion;
+                                    musicQuestion.runTrack(trackNumber) ;
 									trackNumber++;
-                                    // test part
-                                    MusicRadioQuestion xxx = (MusicRadioQuestion) currentQuestion;
-                                    System.out.println(xxx.getMediaPlayer()); // Why this disappears?!
-								    // ends here
 								}
 								currentQuestion.addQuestionAnsweredListener(this);
 								return currentQuestion.getRenderedQuestion();
