@@ -18,9 +18,8 @@ public class MusicRadioQuestion extends RadioQuestion {
     public MusicRadioQuestion(Node renderedQuestion, String id, ToggleGroup group) {
         super(renderedQuestion, id, group);
     }
-
-    String folderPath = "C://Users//Konrad//Desktop//STUDIA//Programowanie aplikacji//applications//ppaKasia//music//" ;
-    // "ppaKasia" is a place where your git repository lives
+    String currentDir = System.getProperty("user.dir");
+    String folderPath = currentDir + "//music//" ;
     // Music files should be in mp3 format and songs should be named the same as corresponding question id (eg. '1.mp3')
 
     public MediaPlayer getMediaPlayer() {
@@ -36,7 +35,6 @@ public class MusicRadioQuestion extends RadioQuestion {
         mediaPlayer.setMute(false);
         mediaPlayer.setAutoPlay(true);
         MediaView mediaView = new MediaView(mediaPlayer);
-        System.out.println(mediaPlayer);
     }
 
     public void terminateTrack(){

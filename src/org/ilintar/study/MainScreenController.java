@@ -44,14 +44,9 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 	@FXML Label fileNameLabel; 
 	@FXML TitledPane titledPane;
 
-    protected IQuestion currentQuestion;
+    public IQuestion currentQuestion;
 
 	int trackNumber = 1; // it's weird place for this var, but it don't destroy anything
-
-    String studyDetails = "StudyDetails.sqf"; // should be set by clicking corresponding button
-//    String studyDetails = "MusicStudyDetails.sqf";
-
-
 
 	@FXML public void startStudy() {
 		if (fileName == null) {
@@ -69,6 +64,10 @@ public class MainScreenController implements QuestionAnsweredEventListener {
         whichQuestion++;
 		mainStudy.getChildren().clear();
 		Node questionComponent = readQuestionFromFile(whichQuestion, getClass().getResourceAsStream(fileName));
+        // test part
+        MusicRadioQuestion xxx = (MusicRadioQuestion) currentQuestion;
+        System.out.println(xxx.getMediaPlayer()); // why this is null? It was not in line 136
+        // ends here
 		if (questionComponent != null){
 			String questionTitle = "Pytanie " + String.valueOf(whichQuestion+1);
 			titledPane.setText(questionTitle);
@@ -132,6 +131,10 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 									MusicRadioQuestion currentQuestion = (MusicRadioQuestion) factoryMap.get(questionType).createQuestion(questionLines, questionId);
 									currentQuestion.runTrack(trackNumber) ;
 									trackNumber++;
+                                    // test part
+                                    MusicRadioQuestion xxx = (MusicRadioQuestion) currentQuestion;
+                                    System.out.println(xxx.getMediaPlayer()); // Why this disappears?!
+								    // ends here
 								}
 								currentQuestion.addQuestionAnsweredListener(this);
 								return currentQuestion.getRenderedQuestion();
@@ -157,16 +160,18 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 		System.out.println(question.getId());
 		System.out.println(answer.getAnswer());
         event.saveToFile();
-		if (currentQuestion instanceof MusicRadioQuestion){ // KS: we can use question = event.getQuestion(); instead of currentquestion here, can't we?
-            System.out.println(((MusicRadioQuestion)currentQuestion).getMediaPlayer());
-            System.out.println(currentQuestion.getId());
-            ((MusicRadioQuestion) currentQuestion).terminateTrack();
+		if (question instanceof MusicRadioQuestion){ // KS: we can use question = event.getQuestion(); instead of currentquestion here, can't we?
+            // KZ: Yes, we can. ;)
+            ((MusicRadioQuestion) question).terminateTrack();
 		}
         displayQuestion(); 
 	}
 
 	public void chooseFile() {
 		 FileChooser fileChooser = new FileChooser();
+         String currentDir = System.getProperty("user.dir") + "\\src\\org\\ilintar\\study"+ File.separator;
+         File file = new File(currentDir); // Should open in our working directory by default now.
+         fileChooser.setInitialDirectory(file);
 		 fileChooser.setTitle("Open Resource File");
 		 fileChooser.getExtensionFilters().addAll(
 				 new ExtensionFilter("Question Files", "*.sqf"),
