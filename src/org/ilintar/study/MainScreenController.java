@@ -38,6 +38,7 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 		factoryMap = new HashMap<>();
 		factoryMap.put("radio", new RadioQuestionFactory());
 		factoryMap.put("music", new MusicRadioQuestionFactory());
+		factoryMap.put("image", new ImageRadioQuestionFactory());
 	}
 
 	@FXML AnchorPane mainStudy;
