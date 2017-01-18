@@ -1,47 +1,37 @@
 StartQuestion type=radio ID=1
-This is the question
-First answer
+Który kotek ma najdłuższy ogon?
+Skwarka
 A
-Second answer
+Cytryndor
 B
-Third answer modified
+Miauczix
 C
-Fourth answer
+Felon
 D
 EndQuestion
 
 StartQuestion type=radio ID=2
-This is the second question
-First answer is totally modified.
+Ile cm ma ogon kota z najdłuższym ogonem?
+10cm
 A
-Second answer
+13,5cm
 B
-Third answer modified
+14cm
 C
-Chose this answer to win.
-X
+Nie wiem.
+D
 EndQuestion
 
 StartQuestion type=radio ID=3
-This is the 3rd question
-First answer is totally modified.
+Ile wynosi suma długości ogonów wszystich kotów?
+120 cm
 A
-Second answer
+46,5cm
 B
-Third answer modified
+23cm
 C
-Chose this answer to win.
-X
+Nie mam zdania.
+D
 EndQuestion
 
-StartQuestion type=radio ID=4
-This is the 4rd question
-First answer is totally modified.
-A
-Second answer
-B
-Third answer modified
-C
-Chose this answer to win.
-X
-EndQuestion
+

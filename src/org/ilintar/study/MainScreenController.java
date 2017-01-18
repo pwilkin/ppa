@@ -162,7 +162,7 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 
 	public void chooseFile() {
 		 FileChooser fileChooser = new FileChooser();
-         String currentDir = System.getProperty("user.dir") + "\\src\\org\\ilintar\\study"+ File.separator;
+		 String currentDir = System.getProperty("user.dir") + File.separator + "src" + File.separator + "org" + File.separator + "ilintar" + File.separator + "study"+ File.separator;
          File file = new File(currentDir); // Should open in our working directory by default now.
          fileChooser.setInitialDirectory(file);
 		 fileChooser.setTitle("Open Resource File");
