@@ -1,35 +1,49 @@
 package org.ilintar.study;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.itextpdf.io.font.FontConstants;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Text;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
-import org.ilintar.study.question.*;
-import org.ilintar.study.question.event.QuestionAnsweredEvent;
-import org.ilintar.study.question.event.QuestionAnsweredEventListener;
-
-import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import org.ilintar.study.question.*;
+import org.ilintar.study.question.event.QuestionAnsweredEvent;
+import org.ilintar.study.question.event.QuestionAnsweredEventListener;
+import org.w3c.dom.Element;
 
-
-import javafx.scene.control.TitledPane;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class MainScreenController implements QuestionAnsweredEventListener {
 
     protected PrintWriter out;
 	private int whichQuestion;
 	private String fileName;
+	protected Map<String, Answer> answers;
 
 	public MainScreenController() throws FileNotFoundException {
         out = new PrintWriter("answers.answ");
+        answers = new LinkedHashMap<>();
 		this.whichQuestion = -1;
 	}
 
@@ -81,6 +95,7 @@ public class MainScreenController implements QuestionAnsweredEventListener {
     private void endStudy() {
         mainStudy.getChildren().clear();
         mainStudy.getChildren().add(new Label("Thank you!"));
+        saveAnswersToFile();
     }
 
     private Node readQuestionFromFile(int i, InputStream resourceAsStream) {
@@ -153,16 +168,14 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 		System.out.println(question.getId());
 		System.out.println(answer.getAnswer());
         event.saveToFile();
-		if (question instanceof MusicRadioQuestion){ // KS: we can use question = event.getQuestion(); instead of currentquestion here, can't we?
-            // KZ: Yes, we can. ;)
-            ((MusicRadioQuestion) question).terminateTrack();
-		}
-        displayQuestion(); 
+        answers.put(question.getId(), answer);
+        question.cleanup();
+        displayQuestion();
 	}
 
 	public void chooseFile() {
 		 FileChooser fileChooser = new FileChooser();
-		 String currentDir = System.getProperty("user.dir") + File.separator + "src" + File.separator + "org" + File.separator + "ilintar" + File.separator + "study"+ File.separator;
+		 String currentDir = System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator + "org" + File.separator + "ilintar" + File.separator + "study"+ File.separator;
          File file = new File(currentDir); // Should open in our working directory by default now.
          fileChooser.setInitialDirectory(file);
 		 fileChooser.setTitle("Open Resource File");
@@ -175,5 +188,50 @@ public class MainScreenController implements QuestionAnsweredEventListener {
 			 fileName = selectedFile.getName();
 			 fileNameLabel.setText(fileName);
 	}}
+
+	public void saveAnswersToFile() {
+
+		DocumentBuilderFactory factory = null;
+		DocumentBuilder builder = null;
+		org.w3c.dom.Document xml;
+
+		try {
+			factory = DocumentBuilderFactory.newInstance();
+			builder = factory.newDocumentBuilder();
+			xml = builder.newDocument();
+			Element ans = xml.createElement("answers");
+			xml.appendChild(ans);
+			for (Entry<String, Answer> answer : answers.entrySet()) {
+				Element ansXML = xml.createElement("answer");
+				ans.appendChild(ansXML);
+				ansXML.setAttribute("question", answer.getKey());
+				ansXML.setTextContent(answer.getValue().getAnswer());
+			}
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(xml);
+			StreamResult result = new StreamResult(new File("answers.xml"));
+			transformer.transform(source, result);
+		} catch (ParserConfigurationException | TransformerException e) {
+			e.printStackTrace();
+		}
+
+
+		try (PdfDocument pdf = new PdfDocument(new PdfWriter("answers.pdf"))) {
+			Document document = new Document(pdf);
+			PdfFont font = PdfFontFactory.createFont(FontConstants.TIMES_ROMAN);
+			PdfFont bold = PdfFontFactory.createFont(FontConstants.TIMES_BOLD);
+			for (Entry<String, Answer> answer : answers.entrySet()) {
+				Text title = new Text(answer.getKey()).setFont(bold);
+				Text author = new Text(answer.getValue().getAnswer()).setFont(font);
+				Paragraph p = new Paragraph().add(title).add(": ").add(author);
+				document.add(p);
+			}
+			document.close();
+		} catch (IOException e) {
+			System.err.println("IOException: " + e.getMessage());
+		}
+
+	}
 	
 }

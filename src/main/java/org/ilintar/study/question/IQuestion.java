@@ -6,9 +6,9 @@ import javafx.scene.Node;
 
 public interface IQuestion extends QuestionAnsweredEventNotifier {
 
-
 	public Node getRenderedQuestion();
 	public String getId();
 	public Answer getAnswer();
+	default public void cleanup() {}
 	
 }

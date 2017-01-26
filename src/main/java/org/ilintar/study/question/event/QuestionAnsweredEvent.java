@@ -36,7 +36,6 @@ public class QuestionAnsweredEvent {
 	}
 
 	public void saveToFile() {
-
 		try(FileWriter fw = new FileWriter("answers.answ", true);
 			BufferedWriter bw = new BufferedWriter(fw);
 			PrintWriter out = new PrintWriter(bw)){

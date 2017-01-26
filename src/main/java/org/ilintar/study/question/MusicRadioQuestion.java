@@ -41,5 +41,8 @@ public class MusicRadioQuestion extends RadioQuestion {
         mediaPlayer.setMute(true);
     }
 
-
+    @Override
+    public void cleanup() {
+        terminateTrack();
+    }
 }
