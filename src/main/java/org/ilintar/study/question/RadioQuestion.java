@@ -1,6 +1,7 @@
 package org.ilintar.study.question;
 
 
+import javafx.scene.control.Toggle;
 import org.ilintar.study.question.event.QuestionAnsweredEventListener;
 
 
@@ -43,7 +44,8 @@ public class RadioQuestion extends QuestionImp {
 
 	@Override
 	public Answer getAnswer() {
-		Answer answer = new Answer((String) group.getSelectedToggle().getUserData());
+		Toggle data = group.getSelectedToggle();
+		Answer answer = new Answer(data == null ? null : (String) data.getUserData());
 		return answer;
 	}
 
