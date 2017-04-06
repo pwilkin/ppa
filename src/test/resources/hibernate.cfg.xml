@@ -23,5 +23,6 @@
 
         <mapping class="org.ilintar.study.users.Participant" />
         <mapping class="org.ilintar.study.users.Answer" />
+        <mapping class="org.ilintar.study.users.Group" />
     </session-factory>
 </hibernate-configuration>

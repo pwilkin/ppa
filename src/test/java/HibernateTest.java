@@ -1,6 +1,7 @@
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.ilintar.study.users.Answer;
+import org.ilintar.study.users.Group;
 import org.ilintar.study.users.Participant;
 import org.junit.Test;
 
@@ -53,6 +54,9 @@ public class HibernateTest {
             answer.setQuestionCode("bla?");
             answer.setParticipant(part);
             part.getAnswers().add(answer);
+            Group group = new Group();
+            group.setName("BLA!");
+            part.getGroups().add(group);
             em.persist(part);
         }
         em.getTransaction().commit();

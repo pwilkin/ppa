@@ -2,7 +2,9 @@ package org.ilintar.study.users;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by pwilkin on 30-Mar-17.
@@ -14,17 +16,6 @@ import java.util.List;
         query = "from Participant where living=:living")
 )
 public class Participant {
-    @Override
-    public String toString() {
-        return "Participant{" +
-                "id=" + id +
-                ", age=" + age +
-                ", education='" + education + '\'' +
-                ", gender='" + gender + '\'' +
-                ", living='" + living + '\'' +
-                ", answers=" + answers +
-                '}';
-    }
 
     @Id
     @Column(name = "ID")
@@ -43,8 +34,20 @@ public class Participant {
     @Column(name = "LIVING")
     protected String living;
 
-    @OneToMany(targetEntity = Answer.class, mappedBy = "participant", cascade = { CascadeType.ALL })
+    @OneToMany(targetEntity = Answer.class, mappedBy = "participant", cascade = CascadeType.ALL)
     protected List<Answer> answers = new ArrayList<>();
+
+    @ManyToMany(targetEntity = Group.class, cascade = CascadeType.ALL)
+    @JoinTable(name = "GROUP_PARTICIPANTS", joinColumns = @JoinColumn(name="participant"), inverseJoinColumns = @JoinColumn(name = "grp"))
+    protected Set<Group> groups = new HashSet<>();
+
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
+    }
 
     public List<Answer> getAnswers() {
         return answers;
@@ -94,4 +97,16 @@ public class Participant {
         this.living = living;
     }
 
+    @Override
+    public String toString() {
+        return "Participant{" +
+                "id=" + id +
+                ", age=" + age +
+                ", education='" + education + '\'' +
+                ", gender='" + gender + '\'' +
+                ", living='" + living + '\'' +
+                ", answers=" + answers +
+                ", groups=" + groups +
+                '}';
+    }
 }
