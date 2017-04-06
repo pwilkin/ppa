@@ -1,5 +1,6 @@
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.ilintar.study.users.Answer;
 import org.ilintar.study.users.Participant;
 import org.junit.Test;
 
@@ -47,8 +48,12 @@ public class HibernateTest {
         List<Participant> parts = em.createQuery("from Participant").getResultList();
         for (Participant part : parts) {
             System.out.println(part);
-            /*part.setLiving("nieznane");
-            em.persist(part);*/
+            Answer answer = new Answer();
+            answer.setAnswer("bla");
+            answer.setQuestionCode("bla?");
+            answer.setParticipant(part);
+            part.getAnswers().add(answer);
+            em.persist(part);
         }
         em.getTransaction().commit();
         em.close();
@@ -60,7 +65,7 @@ public class HibernateTest {
         SessionFactory sf = buildSessionFactory();
         EntityManager em = sf.createEntityManager();
         em.getTransaction().begin();
-        List<Participant> parts = em.createQuery("from Participant where living=:living").
+        List<Participant> parts = em.createNamedQuery("participantByLiving").
             setParameter("living", "nieznane").getResultList();
         for (Participant part : parts) {
             em.remove(part);

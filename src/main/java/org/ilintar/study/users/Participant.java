@@ -1,13 +1,30 @@
 package org.ilintar.study.users;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by pwilkin on 30-Mar-17.
  */
 @Entity
 @Table(name = "PARTICIPANT")
+@NamedQueries(
+    @NamedQuery(name = "participantByLiving",
+        query = "from Participant where living=:living")
+)
 public class Participant {
+    @Override
+    public String toString() {
+        return "Participant{" +
+                "id=" + id +
+                ", age=" + age +
+                ", education='" + education + '\'' +
+                ", gender='" + gender + '\'' +
+                ", living='" + living + '\'' +
+                ", answers=" + answers +
+                '}';
+    }
 
     @Id
     @Column(name = "ID")
@@ -25,6 +42,17 @@ public class Participant {
 
     @Column(name = "LIVING")
     protected String living;
+
+    @OneToMany(targetEntity = Answer.class, mappedBy = "participant", cascade = { CascadeType.ALL })
+    protected List<Answer> answers = new ArrayList<>();
+
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
+    }
 
     public Integer getId() {
         return id;
@@ -66,14 +94,4 @@ public class Participant {
         this.living = living;
     }
 
-    @Override
-    public String toString() {
-        return "Participant{" +
-                "id=" + id +
-                ", age=" + age +
-                ", education='" + education + '\'' +
-                ", gender='" + gender + '\'' +
-                ", living='" + living + '\'' +
-                '}';
-    }
 }

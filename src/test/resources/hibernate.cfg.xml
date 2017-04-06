@@ -22,6 +22,6 @@
         <property name="hbm2ddl.auto">update</property>
 
         <mapping class="org.ilintar.study.users.Participant" />
-
+        <mapping class="org.ilintar.study.users.Answer" />
     </session-factory>
 </hibernate-configuration>
